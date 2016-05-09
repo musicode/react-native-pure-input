@@ -13,12 +13,34 @@ export default class Input extends Component {
     ...TextInput.propTypes,
     inputStyle: TextInput.propTypes.style,
     inputAlign: PropTypes.string,
+    lineHeight: PropTypes.number,
+    onLineChange: PropTypes.func,
   }
 
   static defaultProps = {
     autoCorrect: false,
     autoCapitalize: 'none',
     inputAlign: 'left',
+  }
+
+  handleChange = event => {
+
+    let {
+      lineHeight,
+      onChange,
+      onLineChange,
+    } = this.props
+
+    if (typeof onLineChange === 'function' && lineHeight > 0) {
+      let { height } = event.nativeEvent.contentSize
+      let lines = Math.round(height / lineHeight)
+      onLineChange(lines)
+    }
+
+    if (typeof onChange === 'function') {
+      return onChange(event)
+    }
+
   }
 
   render() {
@@ -35,6 +57,7 @@ export default class Input extends Component {
         {...this.props}
         children={null}
         style={inputStyle}
+        onChange={this.handleChange}
       />
     )
 
