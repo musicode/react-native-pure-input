@@ -26,12 +26,16 @@ export default class Input extends Component {
   handleChange = event => {
 
     let {
+      multiline,
       lineHeight,
       onChange,
       onLineChange,
     } = this.props
 
-    if (typeof onLineChange === 'function' && lineHeight > 0) {
+    if (typeof onLineChange === 'function'
+      && lineHeight > 0
+      && multiline
+    ) {
       let { height } = event.nativeEvent.contentSize
       let lines = Math.round(height / lineHeight)
       onLineChange(lines)
