@@ -23,6 +23,22 @@ export default class Input extends Component {
     inputAlign: 'left',
   }
 
+  isFocused() {
+    this.refs.input.isFocused()
+  }
+
+  focus() {
+    this.refs.input.focus()
+  }
+
+  blur() {
+    this.refs.input.blur()
+  }
+
+  clear() {
+    this.refs.input.clear()
+  }
+
   handleChange = event => {
 
     let {
@@ -59,6 +75,7 @@ export default class Input extends Component {
     let input = (
       <TextInput
         {...this.props}
+        ref="input"
         children={null}
         style={inputStyle}
         onChange={this.handleChange}
