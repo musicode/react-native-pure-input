@@ -16,6 +16,33 @@ const styles = StyleSheet.create({
   }
 })
 
+function diffObject(newObject, oldObject) {
+  for (let key in newObject) {
+    let newValue = newObject[key]
+    let oldValue = oldObject[key]
+    if (newValue !== oldValue) {
+      let type = typeof newValue
+
+      if (type === 'string'
+        || type === 'number'
+        || type === 'boolean'
+      ) {
+        return true
+      }
+
+      try {
+        newValue = JSON.stringify(newValue)
+        oldValue = JSON.stringify(oldValue)
+        if (newValue !== oldValue) {
+          return true
+        }
+      }
+      catch (e) {}
+    }
+  }
+  return false
+}
+
 export default class Input extends Component {
 
   static propTypes = {
@@ -58,27 +85,15 @@ export default class Input extends Component {
   componentDidUpdate() {
     this.measureTextInput()
   }
-  componentWillUnmount() {
-    this.clearMeasureTimer()
-  }
-
-  clearMeasureTimer() {
-    if (this.timer) {
-      clearTimeout(this.timer)
-      this.timer = null
-    }
-  }
-
-  setMeasureTimer(fn) {
-    this.clearMeasureTimer()
-    this.timer = setTimeout(fn, 100)
+  shouldComponentUpdate(props, state) {
+    return diffObject(props, this.props)
+      || diffObject(state, this.state)
   }
 
   measureTextInput() {
     if (!this.needAutoExpand()) {
       return
     }
-    this.fakeTextTestCount = 2
     this.refs.input.measure((ox, oy, width, height) => {
       let { inputWidth } = this.state
       if (width != inputWidth) {
@@ -93,29 +108,17 @@ export default class Input extends Component {
   }
 
   measureFakeText() {
-    this.setMeasureTimer(
-      () => {
-        this.refs.fakeText.measure((ox, oy, width, height) => {
-          this.fakeTextTestCount--
-
-          let { lineHeight, onLineChange } = this.props
-          let lines = Math.round(height / lineHeight)
-
-          if (lines !== this.inputLines
-            && height !== this.inputHeight
-          ) {
-            this.inputHeight = height
-            this.inputLines = lines
-            onLineChange(lines)
-          }
-          else {
-            if (this.fakeTextTestCount > 0) {
-              this.measureFakeText()
-            }
-          }
-        })
+    this.refs.fakeText.measure((ox, oy, width, height) => {
+      let { lineHeight, onLineChange } = this.props
+      let lines = Math.round(height / lineHeight)
+      if (lines !== this.inputLines
+        && height !== this.inputHeight
+      ) {
+        this.inputHeight = height
+        this.inputLines = lines
+        onLineChange(lines)
       }
-    )
+    })
   }
 
   needAutoExpand() {
