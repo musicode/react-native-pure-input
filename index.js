@@ -37,7 +37,9 @@ function diffObject(newObject, oldObject) {
           return true
         }
       }
-      catch (e) {}
+      catch (e) {
+        return true
+      }
     }
   }
   return false
