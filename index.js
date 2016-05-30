@@ -1,8 +1,11 @@
 'use strict'
 
 import React, {
-  StyleSheet,
   Component,
+} from 'react'
+
+import {
+  StyleSheet,
   PropTypes,
   TextInput,
   View,
