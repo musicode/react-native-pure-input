@@ -2,11 +2,11 @@
 
 import React, {
   Component,
+  PropTypes,
 } from 'react'
 
 import {
   StyleSheet,
-  PropTypes,
   TextInput,
   View,
   Text,
