@@ -54,6 +54,7 @@ export default class Input extends Component {
     ...TextInput.propTypes,
     inputStyle: TextInput.propTypes.style,
     inputAlign: PropTypes.string,
+    inputValue: PropTypes.string,
     lineHeight: PropTypes.number,
     onLineChange: PropTypes.func,
   }
@@ -129,6 +130,7 @@ export default class Input extends Component {
   needAutoExpand() {
 
     let {
+      inputValue,
       multiline,
       lineHeight,
       onLineChange,
@@ -137,13 +139,14 @@ export default class Input extends Component {
     return multiline
       && lineHeight > 0
       && typeof onLineChange === 'function'
+      && typeof inputValue === 'string'
 
   }
 
   render() {
 
     let {
-      value,
+      inputValue,
       children,
       style,
       inputStyle,
@@ -188,7 +191,7 @@ export default class Input extends Component {
           ref="fakeText"
           style={[styles.fakeText, textStyle]}
         >
-          {value}
+          {inputValue}
         </Text>
       )
     }
