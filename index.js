@@ -12,41 +12,14 @@ import {
   Text,
 } from 'react-native'
 
+import objectIsChange from 'object-is-change'
+
 const styles = StyleSheet.create({
   fakeText: {
     position: 'absolute',
     left: 3000,
   }
 })
-
-function diffObject(newObject, oldObject) {
-  for (let key in newObject) {
-    let newValue = newObject[key]
-    let oldValue = oldObject[key]
-    if (newValue !== oldValue) {
-      let type = typeof newValue
-
-      if (type === 'string'
-        || type === 'number'
-        || type === 'boolean'
-      ) {
-        return true
-      }
-
-      try {
-        newValue = JSON.stringify(newValue)
-        oldValue = JSON.stringify(oldValue)
-        if (newValue !== oldValue) {
-          return true
-        }
-      }
-      catch (e) {
-        return true
-      }
-    }
-  }
-  return false
-}
 
 export default class Input extends Component {
 
@@ -92,8 +65,8 @@ export default class Input extends Component {
     this.measureTextInput()
   }
   shouldComponentUpdate(props, state) {
-    return diffObject(props, this.props)
-      || diffObject(state, this.state)
+    return objectIsChange(props, this.props)
+      || objectIsChange(state, this.state)
   }
 
   measureTextInput() {
