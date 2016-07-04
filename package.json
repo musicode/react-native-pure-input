@@ -1,6 +1,6 @@
 {
   "name": "react-native-pure-input",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "react native text input",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/musicode/react-native-pure-input#readme",
   "dependencies": {
-    "object-is-change": "^1.0.0"
+    "object-is-change": "^1.0.1"
   }
 }

@@ -58,6 +58,10 @@ export default class Input extends Component {
     this.refs.input.clear()
   }
 
+  setNativeProps(props) {
+    this.refs.input.setNativeProps(props)
+  }
+
   componentDidMount() {
     this.measureTextInput()
   }
