@@ -15,6 +15,9 @@ import {
 import objectIsChange from 'object-is-change'
 
 const styles = StyleSheet.create({
+  input: {
+    flex: 1,
+  },
   fakeText: {
     position: 'absolute',
     left: 3000,
@@ -135,7 +138,7 @@ export default class Input extends Component {
         {...this.props}
         ref="input"
         children={null}
-        style={inputStyle}
+        style={[styles.input, inputStyle]}
       />
     )
 
