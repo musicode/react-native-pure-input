@@ -9,7 +9,6 @@ import {
   StyleSheet,
   TextInput,
   View,
-  Text,
 } from 'react-native'
 
 import objectIsChange from 'object-is-change'
@@ -17,10 +16,6 @@ import objectIsChange from 'object-is-change'
 const styles = StyleSheet.create({
   input: {
     flex: 1,
-  },
-  fakeText: {
-    position: 'absolute',
-    left: 3000,
   }
 })
 
@@ -30,19 +25,13 @@ export default class Input extends Component {
     ...TextInput.propTypes,
     inputStyle: TextInput.propTypes.style,
     inputAlign: PropTypes.string,
-    inputValue: PropTypes.string,
-    lineHeight: PropTypes.number,
-    onLineChange: PropTypes.func,
+    onHeightChange: PropTypes.func,
   }
 
   static defaultProps = {
     autoCorrect: false,
     autoCapitalize: 'none',
     inputAlign: 'left',
-  }
-
-  state = {
-    inputWidth: 0,
   }
 
   isFocused() {
@@ -65,68 +54,45 @@ export default class Input extends Component {
     this.refs.input.setNativeProps(props)
   }
 
-  componentDidMount() {
-    this.measureTextInput()
-  }
-  componentDidUpdate() {
-    this.measureTextInput()
-  }
-  shouldComponentUpdate(props, state) {
+  shouldComponentUpdate(props) {
     return objectIsChange(props, this.props)
-      || objectIsChange(state, this.state)
   }
 
-  measureTextInput() {
-    if (!this.needAutoExpand()) {
-      return
+  handleContentSizeChange = event => {
+
+    let {
+      onHeightChange,
+      onContentSizeChange,
+    } = this.props
+
+    if (this.needAutoExpand()) {
+      let { height } = event.nativeEvent.contentSize
+      if (this.height !== height) {
+        this.height = height
+        onHeightChange(height)
+      }
     }
-    this.refs.input.measure((ox, oy, width, height) => {
-      let { inputWidth } = this.state
-      if (width != inputWidth) {
-        this.setState({
-          inputWidth: width
-        })
-      }
-      else {
-        this.measureFakeText()
-      }
-    })
-  }
 
-  measureFakeText() {
-    this.refs.fakeText.measure((ox, oy, width, height) => {
-      let { lineHeight, onLineChange } = this.props
-      let lines = Math.round(height / lineHeight)
-      if (lines !== this.inputLines
-        && height !== this.inputHeight
-      ) {
-        this.inputHeight = height
-        this.inputLines = lines
-        onLineChange(lines)
-      }
-    })
+    if (typeof onContentSizeChange === 'function') {
+      onContentSizeChange(event)
+    }
   }
 
   needAutoExpand() {
 
     let {
-      inputValue,
       multiline,
-      lineHeight,
-      onLineChange,
+      onHeightChange,
     } = this.props
 
     return multiline
-      && lineHeight > 0
-      && typeof onLineChange === 'function'
-      && typeof inputValue === 'string'
+      && typeof onHeightChange === 'function'
 
   }
 
   render() {
 
     let {
-      inputValue,
       children,
       style,
       inputStyle,
@@ -139,6 +105,7 @@ export default class Input extends Component {
         ref="input"
         children={null}
         style={[styles.input, inputStyle]}
+        onContentSizeChange={this.handleContentSizeChange}
       />
     )
 
@@ -155,32 +122,10 @@ export default class Input extends Component {
       }
     }
 
-    let fakeText
-    if (inputStyle && this.needAutoExpand()) {
-
-      let textStyle = StyleSheet.flatten(inputStyle)
-      if ('height' in textStyle) {
-        delete textStyle.height
-      }
-
-      let { inputWidth } = this.state
-      textStyle.width = inputWidth
-
-      fakeText = (
-        <Text
-          ref="fakeText"
-          style={[styles.fakeText, textStyle]}
-        >
-          {inputValue}
-        </Text>
-      )
-    }
-
     return (
       <View style={style}>
         {first}
         {second}
-        {fakeText}
       </View>
     )
   }
