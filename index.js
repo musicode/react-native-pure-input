@@ -8,16 +8,40 @@ import React, {
 import {
   StyleSheet,
   TextInput,
+  Platform,
   View,
 } from 'react-native'
 
-import objectIsChange from 'object-is-change'
+const isAndroid = Platform.OS === 'android'
 
 const styles = StyleSheet.create({
   input: {
     flex: 1,
   }
 })
+
+function getVerticalPaddings(style) {
+
+  let {
+    paddingTop,
+    paddingBottom,
+    paddingVertical,
+  } = style
+
+  if (paddingVertical) {
+    if (!paddingTop) {
+      paddingTop = paddingVertical
+    }
+    if (!paddingBottom) {
+      paddingBottom = paddingVertical
+    }
+  }
+
+  return {
+    paddingTop: paddingTop || 0,
+    paddingBottom: paddingBottom || 0,
+  }
+}
 
 export default class Input extends Component {
 
@@ -31,7 +55,14 @@ export default class Input extends Component {
   static defaultProps = {
     autoCorrect: false,
     autoCapitalize: 'none',
+    underlineColorAndroid: 'rgba(0,0,0,0)',
+    placeholderTextColor: 'rgba(0,0,0,0.2)',
     inputAlign: 'left',
+    inputStyle: {
+      backgroundColor: '#FFF',
+      fontSize: 14,
+      paddingHorizontal: 14,
+    }
   }
 
   isFocused() {
@@ -52,10 +83,6 @@ export default class Input extends Component {
 
   setNativeProps(props) {
     this.refs.input.setNativeProps(props)
-  }
-
-  shouldComponentUpdate(props) {
-    return objectIsChange(props, this.props)
   }
 
   handleContentSizeChange = event => {
@@ -97,14 +124,34 @@ export default class Input extends Component {
       style,
       inputStyle,
       inputAlign,
+      ...props
     } = this.props
+
+    let styles = StyleSheet.flatten([style])
+    let inputStyles = StyleSheet.flatten([styles.input, inputStyle])
+
+    if (isAndroid) {
+
+        let paddings = getVerticalPaddings(styles)
+        let inputPaddings = getVerticalPaddings(inputStyles)
+
+        styles.paddingTop = paddings.paddingTop + inputPaddings.paddingTop
+        styles.paddingBottom = paddings.paddingBottom + inputPaddings.paddingBottom
+
+        inputStyles.paddingVertical =
+        inputStyles.paddingTop =
+        inputStyles.paddingBottom = 0
+
+        if (!props.textAlignVertical && props.multiline) {
+          props.textAlignVertical = 'top'
+        }
+    }
 
     let input = (
       <TextInput
-        {...this.props}
+        {...props}
         ref="input"
-        children={null}
-        style={[styles.input, inputStyle]}
+        style={inputStyles}
         onContentSizeChange={this.handleContentSizeChange}
       />
     )
@@ -123,7 +170,7 @@ export default class Input extends Component {
     }
 
     return (
-      <View style={style}>
+      <View style={styles}>
         {first}
         {second}
       </View>
