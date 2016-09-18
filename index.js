@@ -127,8 +127,20 @@ export default class Input extends Component {
       ...props
     } = this.props
 
-    let styles = StyleSheet.flatten([style])
-    let inputStyles = StyleSheet.flatten([styles.input, inputStyle])
+    let styles = style
+    if (typeof style === 'number') {
+      styles = StyleSheet.flatten(style)
+    }
+
+    let inputStyles = {
+      flex: 1,
+    }
+    if (typeof inputStyle === 'number') {
+      inputStyle = StyleSheet.flatten(inputStyle)
+    }
+    if (inputStyle && typeof inputStyle === 'object') {
+      inputStyles = Object.assign(inputStyles, inputStyle)
+    }
 
     if (isAndroid) {
 
