@@ -14,12 +14,6 @@ import {
 
 const isAndroid = Platform.OS === 'android'
 
-const styles = StyleSheet.create({
-  input: {
-    flex: 1,
-  }
-})
-
 function getVerticalPaddings(style) {
 
   let {
@@ -41,6 +35,24 @@ function getVerticalPaddings(style) {
     paddingTop: paddingTop || 0,
     paddingBottom: paddingBottom || 0,
   }
+}
+
+function flattenStyle(style) {
+  let result = {}
+  if (Array.isArray(style)) {
+    style.forEach(style => {
+      Object.assign(result, flattenStyle(style))
+    })
+  }
+  else {
+    if (typeof style === 'number') {
+      style = StyleSheet.flatten(style)
+    }
+    if (style && typeof style === 'object') {
+      Object.assign(result, style)
+    }
+  }
+  return result
 }
 
 export default class Input extends Component {
@@ -127,20 +139,13 @@ export default class Input extends Component {
       ...props
     } = this.props
 
-    let styles = style
-    if (typeof style === 'number') {
-      styles = StyleSheet.flatten(style)
-    }
-
-    let inputStyles = {
-      flex: 1,
-    }
-    if (typeof inputStyle === 'number') {
-      inputStyle = StyleSheet.flatten(inputStyle)
-    }
-    if (inputStyle && typeof inputStyle === 'object') {
-      inputStyles = Object.assign(inputStyles, inputStyle)
-    }
+    let styles = flattenStyle(style)
+    let inputStyles = flattenStyle([
+      {
+        flex: 1,
+      },
+      inputStyle
+    ])
 
     if (isAndroid) {
 
