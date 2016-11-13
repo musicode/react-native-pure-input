@@ -8,52 +8,18 @@ import React, {
 import {
   StyleSheet,
   TextInput,
-  Platform,
   View,
 } from 'react-native'
 
-const isAndroid = Platform.OS === 'android'
-
-function getVerticalPaddings(style) {
-
-  let {
-    paddingTop,
-    paddingBottom,
-    paddingVertical,
-  } = style
-
-  if (paddingVertical) {
-    if (!paddingTop) {
-      paddingTop = paddingVertical
-    }
-    if (!paddingBottom) {
-      paddingBottom = paddingVertical
-    }
+const styles = StyleSheet.create({
+  view: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
   }
-
-  return {
-    paddingTop: paddingTop || 0,
-    paddingBottom: paddingBottom || 0,
-  }
-}
-
-function flattenStyle(style) {
-  let result = {}
-  if (Array.isArray(style)) {
-    style.forEach(style => {
-      Object.assign(result, flattenStyle(style))
-    })
-  }
-  else {
-    if (typeof style === 'number') {
-      style = StyleSheet.flatten(style)
-    }
-    if (style && typeof style === 'object') {
-      Object.assign(result, style)
-    }
-  }
-  return result
-}
+})
 
 export default class Input extends Component {
 
@@ -139,36 +105,11 @@ export default class Input extends Component {
       ...props
     } = this.props
 
-    let styles = flattenStyle(style)
-    let inputStyles = flattenStyle([
-      {
-        flex: 1,
-      },
-      inputStyle
-    ])
-
-    if (isAndroid) {
-
-        let paddings = getVerticalPaddings(styles)
-        let inputPaddings = getVerticalPaddings(inputStyles)
-
-        styles.paddingTop = paddings.paddingTop + inputPaddings.paddingTop
-        styles.paddingBottom = paddings.paddingBottom + inputPaddings.paddingBottom
-
-        inputStyles.paddingVertical =
-        inputStyles.paddingTop =
-        inputStyles.paddingBottom = 0
-
-        if (!props.textAlignVertical && props.multiline) {
-          props.textAlignVertical = 'top'
-        }
-    }
-
     let input = (
       <TextInput
         {...props}
         ref="input"
-        style={inputStyles}
+        style={[styles.input, inputStyle]}
         onContentSizeChange={this.handleContentSizeChange}
       />
     )
@@ -187,7 +128,7 @@ export default class Input extends Component {
     }
 
     return (
-      <View style={styles}>
+      <View style={[styles.view, style]}>
         {first}
         {second}
       </View>
