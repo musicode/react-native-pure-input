@@ -13,9 +13,7 @@ import {
 import PropTypes from 'prop-types'
 
 const inputStyle = {
-  backgroundColor: '#FFF',
-  fontSize: 14,
-  paddingHorizontal: 14,
+  flex: 1,
 }
 
 if (Platform.OS === 'android') {
@@ -27,9 +25,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  input: {
-    flex: 1,
-  }
+  input: inputStyle,
 })
 
 export default class Input extends Component {
@@ -48,7 +44,11 @@ export default class Input extends Component {
     placeholderTextColor: 'rgba(0,0,0,0.2)',
     inputAlign: 'left',
     selectionColor: '#D6EAF8',
-    inputStyle,
+    inputStyle: {
+      backgroundColor: '#FFF',
+      fontSize: 14,
+      paddingHorizontal: 14,
+    }
   }
 
   isFocused() {
