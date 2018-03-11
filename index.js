@@ -1,8 +1,6 @@
-'use strict'
 
 import React, {
   Component,
-  PropTypes,
 } from 'react'
 
 import {
@@ -10,6 +8,8 @@ import {
   TextInput,
   View,
 } from 'react-native'
+
+import PropTypes from 'prop-types'
 
 const styles = StyleSheet.create({
   view: {
@@ -36,6 +36,7 @@ export default class Input extends Component {
     underlineColorAndroid: 'rgba(0,0,0,0)',
     placeholderTextColor: 'rgba(0,0,0,0.2)',
     inputAlign: 'left',
+    selectionColor: '#3A9BDC',
     inputStyle: {
       backgroundColor: '#FFF',
       fontSize: 14,
