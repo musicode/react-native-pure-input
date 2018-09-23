@@ -1,6 +1,6 @@
 {
   "name": "react-native-pure-input",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "react native text input",
   "main": "index.js",
   "scripts": {

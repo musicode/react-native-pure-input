@@ -43,12 +43,6 @@ export default class Input extends Component {
     underlineColorAndroid: 'rgba(0,0,0,0)',
     placeholderTextColor: 'rgba(0,0,0,0.2)',
     inputAlign: 'left',
-    selectionColor: '#70b8ea',
-    inputStyle: {
-      backgroundColor: '#FFF',
-      fontSize: 14,
-      paddingHorizontal: 14,
-    }
   }
 
   isFocused() {
