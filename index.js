@@ -107,11 +107,21 @@ export default class Input extends Component {
       ...props
     } = this.props
 
+    let inputStyles = [ styles.input ]
+    if (props.multiline) {
+      inputStyles.push({
+        textAlignVertical: 'top'
+      })
+    }
+    if (inputStyle) {
+      inputStyles.push(inputStyle)
+    }
+
     let input = (
       <TextInput
         {...props}
         ref="input"
-        style={[styles.input, inputStyle]}
+        style={inputStyles}
         onContentSizeChange={this.handleContentSizeChange}
       />
     )
