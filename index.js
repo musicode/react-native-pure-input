@@ -1,6 +1,7 @@
 
 import React, {
-  Component,
+  createRef,
+  PureComponent,
 } from 'react'
 
 import {
@@ -28,11 +29,10 @@ const styles = StyleSheet.create({
   input: inputStyle,
 })
 
-export default class Input extends Component {
+export default class Input extends PureComponent {
 
   static propTypes = {
-    ...TextInput.propTypes,
-    inputStyle: TextInput.propTypes.style,
+    inputStyle: PropTypes.any,
     inputAlign: PropTypes.string,
     onHeightChange: PropTypes.func,
   }
@@ -45,24 +45,29 @@ export default class Input extends Component {
     inputAlign: 'left',
   }
 
+  constructor(props) {
+    super(props)
+    this.inputRef = createRef()
+  }
+
   isFocused() {
-    this.refs.input.isFocused()
+    this.inputRef.current?.isFocused()
   }
 
   focus() {
-    this.refs.input.focus()
+    this.inputRef.current?.focus()
   }
 
   blur() {
-    this.refs.input.blur()
+    this.inputRef.current?.blur()
   }
 
   clear() {
-    this.refs.input.clear()
+    this.inputRef.current?.clear()
   }
 
   setNativeProps(props) {
-    this.refs.input.setNativeProps(props)
+    this.inputRef.current?.setNativeProps(props)
   }
 
   handleContentSizeChange = event => {
@@ -120,7 +125,7 @@ export default class Input extends Component {
     let input = (
       <TextInput
         {...props}
-        ref="input"
+        ref={this.inputRef}
         style={inputStyles}
         onContentSizeChange={this.handleContentSizeChange}
       />
